@@ -16,28 +16,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private val permissions by lazy {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-            arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION
-            )
-        else
-            arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            )
-    }
-
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) {
-        it.forEach { (key, value) ->
-            Log.d("PERMISSIONS", "$key: $value")
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -47,51 +25,5 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-
-        when {
-            ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED -> {
-                Log.d("PERMISSIONS", "Manifest.permission.ACCESS_FINE_LOCATION: true")
-            }
-            ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED -> {
-                Log.d("PERMISSIONS", "Manifest.permission.ACCESS_COARSE_LOCATION: true")
-            }
-            shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) -> {
-                Log.d("PERMISSIONS", "ALERT - Manifest.permission.ACCESS_FINE_LOCATION")
-                AlertDialog.Builder(this)
-                    .setMessage("ACCESS_FINE_LOCATION")
-                    .setPositiveButton("OK", { dialog, which ->
-                        Log.d("PERMISSIONS", "Positivo")
-                    })
-                    .setNegativeButton("CANCEL", { dialog, which ->
-                        Log.d("PERMISSIONS", "Negativo")
-
-                    })
-                    .show()
-            }
-            shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION) -> {
-                Log.d("PERMISSIONS", "ALERT - Manifest.permission.ACCESS_COARSE_LOCATION")
-                AlertDialog.Builder(this)
-                    .setMessage("ACCESS_COARSE_LOCATION")
-                    .setPositiveButton("OK", { dialog, which ->
-                        Log.d("PERMISSIONS", "Positivo")
-                    })
-                    .setNegativeButton("CANCEL", { dialog, which ->
-                        Log.d("PERMISSIONS", "Negativo")
-                    })
-                    .show()
-
-            }
-            else -> {
-                requestPermissionLauncher.launch(
-                    permissions
-                )
-            }
-        }
     }
 }
